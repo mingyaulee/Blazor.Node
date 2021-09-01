@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Build properties. -->
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <IsShippingPackage>true</IsShippingPackage>
+    <HasReferenceAssembly>false</HasReferenceAssembly>
+  </PropertyGroup>
+
+  <!-- Package properties. -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageOutputPath>..\PackageOutput</PackageOutputPath>
+    <Authors>mingyaulee</Authors>
+    <Description>Build a Node application with Blazor.</Description>
+    <RepositoryUrl>https://github.com/mingyaulee/Blazor.Node</RepositoryUrl>
+    <PackageTags>Blazor .Net Node NodeJs JavaScript</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>Icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Blazor.Node.Build\Blazor.Node.Build.csproj" PrivateAssets="contentfiles" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="..\Icon\Icon.png">
+      <Pack>true</Pack>
+      <PackagePath></PackagePath>
+    </Content>
+  </ItemGroup>
+
+</Project>

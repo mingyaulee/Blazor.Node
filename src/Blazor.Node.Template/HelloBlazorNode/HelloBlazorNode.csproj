@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazor.Node" Version="0.1.*" />
+<!--#if (Framework == "net6.0") -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.*-*" />
+<!--#else -->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.*" />
+<!--#endif -->
+  </ItemGroup>
+
+</Project>

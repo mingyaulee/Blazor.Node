@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "HelloBlazorNode": {
+      "commandName": "Project"
+    }
+  }
+}

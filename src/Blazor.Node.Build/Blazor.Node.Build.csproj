@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Build properties. -->
+  <PropertyGroup>
+    <LangVersion>8.0</LangVersion>
+    <TargetFrameworks>net5.0;net472</TargetFrameworks>
+    <GenerateDependencyFile>false</GenerateDependencyFile>
+    <IsShippingPackage>true</IsShippingPackage>
+    <HasReferenceAssembly>false</HasReferenceAssembly>
+  </PropertyGroup>
+
+  <!-- Package properties. -->
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageOutputPath>..\PackageOutput</PackageOutputPath>
+    <!-- Suppresses the warnings about the package not having assemblies in lib/*/.dll. -->
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+    <Authors>mingyaulee</Authors>
+    <Description>A package for building a Blazor WebAssembly application to a Node application.</Description>
+    <RepositoryUrl>https://github.com/mingyaulee/Blazor.Node</RepositoryUrl>
+    <PackageTags>Blazor .Net Node NodeJs JavaScript</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageIcon>Icon.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Framework" Version="16.9.0" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="16.9.0" PrivateAssets="All" />
+    <PackageReference Include="System.Text.Json" Version="5.0.2" Condition="'$(TargetFramework)' == 'net472'" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="../BlazorNodeRunner/dist/*.*">
+      <Link>content/BlazorNodeRunner/%(FileName)%(Extension)</Link>
+      <Pack>true</Pack>
+      <PackagePath>content/BlazorNodeRunner</PackagePath>
+    </Content>
+    <Content Include="build\**">
+      <Pack>true</Pack>
+      <PackagePath>build</PackagePath>
+    </Content>
+    <Content Include="lib/*.*">
+      <Pack>true</Pack>
+      <PackagePath>tasks/net472</PackagePath>
+    </Content>
+    <Content Include="..\Icon\Icon.png">
+      <Pack>true</Pack>
+      <PackagePath></PackagePath>
+    </Content>
+  </ItemGroup>
+
+</Project>

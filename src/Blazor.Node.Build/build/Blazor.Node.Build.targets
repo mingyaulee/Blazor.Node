@@ -1,0 +1,100 @@
+﻿<!-- build/Blazor.Node.Build.targets -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <RunCommand>node</RunCommand>
+    <RunArguments>$(TargetDir)app.js -- --rootDirectory:$(TargetDir)$(BlazorAssetsPath) --workingDirectory:$(TargetDir)</RunArguments>
+    <!--
+      The target 'ResolveRazorComponentInputs' resolves the item group RazorComponent.
+      Source:
+      - Current/.Net 6 https://github.com/dotnet/sdk/blob/main/src/RazorSdk/Targets/Sdk.Razor.CurrentVersion.targets
+      - .Net 5 https://github.com/dotnet/aspnetcore/blob/v5.0.0/src/Razor/Microsoft.NET.Sdk.Razor/src/build/netstandard2.0/Sdk.Razor.CurrentVersion.targets
+    -->
+    <_ConvertBlazorToNodeDependsOn>
+      DefineBlazorToNodeFrameworkJsFileContentReplacements;
+      ResolveRazorComponentInputs
+    </_ConvertBlazorToNodeDependsOn>
+  </PropertyGroup>
+
+  <!-- Target
+    Runs only when another target depends on this target.
+    Defines the properties required for replacing blazor.webassembly.js and dotnet.*.js.
+  -->
+  <Target Name="DefineBlazorToNodeFrameworkJsFileContentReplacements">
+
+    <ItemGroup>
+      <!-- Define contents to replace in blazor.webassembly.js -->
+      <_BlazorNode_BlazorJs_FileContentReplacements Include="Module cwrap">
+        <From>cwrap(</From>
+        <To>globalThis.Module.cwrap(</To>
+      </_BlazorNode_BlazorJs_FileContentReplacements>
+      <_BlazorNode_BlazorJs_FileContentReplacements Include="Module addRunDependency">
+        <From>addRunDependency(</From>
+        <To>globalThis.Module.addRunDependency(</To>
+      </_BlazorNode_BlazorJs_FileContentReplacements>
+      <_BlazorNode_BlazorJs_FileContentReplacements Include="Module removeRunDependency">
+        <From>removeRunDependency(</From>
+        <To>globalThis.Module.removeRunDependency(</To>
+      </_BlazorNode_BlazorJs_FileContentReplacements>
+      <!-- Define contents to replace in dotnet.*.js -->
+      <_BlazorNode_DotNetJs_FileContentReplacements Include="module reference">
+        <From>Module!=="undefined"?Module</From>
+        <To>globalThis.Module!=="undefined"?globalThis.Module</To>
+      </_BlazorNode_DotNetJs_FileContentReplacements>
+      <_BlazorNode_DotNetJs_FileContentReplacements Include="MONO declaration">
+        <From>var MONO=</From>
+        <To>globalThis.MONO=</To>
+      </_BlazorNode_DotNetJs_FileContentReplacements>
+      <_BlazorNode_DotNetJs_FileContentReplacements Include="BINDING declaration">
+        <From>var BINDING=</From>
+        <To>globalThis.BINDING=</To>
+      </_BlazorNode_DotNetJs_FileContentReplacements>
+      <_BlazorNode_DotNetJs_FileContentReplacements Include="accessing mono_wasm_assembly_already_added" Condition="'$(TargetFramework)' == 'net5.0'">
+        <From>this.mono_wasm_assembly_already_added</From>
+        <To>globalThis.mono_wasm_assembly_already_added</To>
+      </_BlazorNode_DotNetJs_FileContentReplacements>
+      <_BlazorNode_DotNetJs_FileContentReplacements Include="accessing mono_set_timeout_exec">
+        <From>this.mono_set_timeout_exec</From>
+        <To>globalThis.mono_set_timeout_exec</To>
+      </_BlazorNode_DotNetJs_FileContentReplacements>
+    </ItemGroup>
+
+  </Target>
+
+  <!-- Target
+    Runs after the build happens.
+    Converts the build output of the project to be able to run from Node.js.
+  -->
+  <Target Name="RunBuildBlazorToNode"
+          AfterTargets="AfterBuild"
+          DependsOnTargets="$(_ConvertBlazorToNodeDependsOn)">
+
+    <PropertyGroup>
+      <_BlazorNode_Project_BuildOutput_Assets_Directory>$(TargetDir)$(BlazorAssetsPath)</_BlazorNode_Project_BuildOutput_Assets_Directory>
+      <_BlazorNode_Project_BuildOutput_Assets_Framework_Directory>$(_BlazorNode_Project_BuildOutput_Assets_Directory)\_framework</_BlazorNode_Project_BuildOutput_Assets_Framework_Directory>
+      <_BlazorNode_Package_Contents_Runner_Directory Condition="'$(_BlazorNode_Package_Contents_Runner_Directory)' == ''">$(MSBuildThisFileDirectory)..\content\BlazorNodeRunner</_BlazorNode_Package_Contents_Runner_Directory>
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Converting Blazor application to Node application" />
+
+    <Message Importance="high" Text="  Replacing content of 'blazor.webassembly.js' and 'dotnet.*.js'" />
+    <ItemGroup>
+      <_BlazorNode_Project_BuildOutput_Assets_Framework_BlazorJs_FilePath Include="$(_BlazorNode_Project_BuildOutput_Assets_Framework_Directory)\blazor.webassembly.js" />
+      <_BlazorNode_Project_BuildOutput_Assets_Framework_DotNetJs_FilePath Include="$(_BlazorNode_Project_BuildOutput_Assets_Framework_Directory)\dotnet.*.js" />
+    </ItemGroup>
+    <BlazorToNodeReplaceContent Files="@(_BlazorNode_Project_BuildOutput_Assets_Framework_BlazorJs_FilePath)"
+                                            Replace="@(_BlazorNode_BlazorJs_FileContentReplacements)" />
+    <BlazorToNodeReplaceContent Files="@(_BlazorNode_Project_BuildOutput_Assets_Framework_DotNetJs_FilePath)"
+                                            Replace="@(_BlazorNode_DotNetJs_FileContentReplacements)" />
+
+    <Message Importance="high" Text="  Setting up Blazor node runner" />
+    <Copy SourceFiles="$(_BlazorNode_Package_Contents_Runner_Directory)\app.js"
+          DestinationFolder="$(TargetDir)" />
+    <BlazorToNodeCopyOrMergePackageJson SourceFolder="$(_BlazorNode_Package_Contents_Runner_Directory)"
+                                        DestinationFolder="$(TargetDir)" />
+
+    <Message Importance="high" Text="Conversion completed from Blazor application to Node application" />
+
+  </Target>
+  
+</Project>

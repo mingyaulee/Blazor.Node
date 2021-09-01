@@ -1,0 +1,17 @@
+﻿<!-- build/Blazor.Node.Build.props -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <BlazorAssetsPath Condition="'$(BlazorAssetsPath)' == ''">wwwroot</BlazorAssetsPath>
+    <!-- Get the binary file based on the runtime type, net5.0 for dotnet build and net472 for VS build -->
+    <_BlazorNodeBuildTaskFolder Condition="'$(MSBuildRuntimeType)' == 'Core'">net5.0</_BlazorNodeBuildTaskFolder>
+    <_BlazorNodeBuildTaskFolder Condition="'$(MSBuildRuntimeType)' != 'Core'">net472</_BlazorNodeBuildTaskFolder>
+    <_BlazorNodeBuildOutputFolder Condition="'$(_BlazorNodeBuildOutputFolder)' == ''">tasks</_BlazorNodeBuildOutputFolder>
+    <_BlazorNodeBuildTaskAssembly Condition="'$(_BlazorNodeBuildTaskAssembly)' == ''">$(MSBuildThisFileDirectory)..\$(_BlazorNodeBuildOutputFolder)\$(_BlazorNodeBuildTaskFolder)\Blazor.Node.Build.dll</_BlazorNodeBuildTaskAssembly>
+  </PropertyGroup>
+
+  <!-- Register the tasks from this assembly -->
+  <UsingTask TaskName="Blazor.Node.Build.Tasks.BlazorToNodeReplaceContent" AssemblyFile="$(_BlazorNodeBuildTaskAssembly)" />
+  <UsingTask TaskName="Blazor.Node.Build.Tasks.BlazorToNodeCopyOrMergePackageJson" AssemblyFile="$(_BlazorNodeBuildTaskAssembly)" />
+
+</Project>

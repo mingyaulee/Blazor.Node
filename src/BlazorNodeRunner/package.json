@@ -1,0 +1,22 @@
+{
+  "name": "blazor-node-runner",
+  "version": "0.0.0",
+  "description": "BlazorNodeRunner",
+  "main": "app.js",
+  "author": {
+    "name": ""
+  },
+  "scripts": {
+    "bundle": "rollup -c"
+  },
+  "dependencies": {
+    "@types/node": "^14.17.12",
+    "jsdom": "^17.0.0",
+    "node-fetch": "3.0.0-beta.10"
+  },
+  "devDependencies": {
+    "rollup": "^2.36.2",
+    "@rollup/plugin-json": "4.1.0",
+    "@rollup/plugin-commonjs": "^20.0.0"
+  }
+}
