@@ -48,8 +48,12 @@ namespace Blazor.Node.Build.Tasks
 
         private static void MergeFiles(string sourceFile, string destinationFile)
         {
-            var sourceJson = JsonSerializer.Deserialize<PackageJson>(File.ReadAllText(sourceFile));
-            var destinationJson = JsonSerializer.Deserialize<PackageJson>(File.ReadAllText(destinationFile));
+            var options = new JsonSerializerOptions()
+            {
+                ReadCommentHandling = JsonCommentHandling.Skip
+            };
+            var sourceJson = JsonSerializer.Deserialize<PackageJson>(File.ReadAllText(sourceFile), options);
+            var destinationJson = JsonSerializer.Deserialize<PackageJson>(File.ReadAllText(destinationFile), options);
 
             if (destinationJson.DevDependencies is null)
             {
