@@ -18,7 +18,7 @@ namespace Blazor.Node
             var host = builder.Build();
             var jsRuntime = (IJSInProcessRuntime)host.Services.GetService<IJSRuntime>();
 
-            await Execute(host.Services);
+            await Execute(host.Services).ConfigureAwait(false);
             jsRuntime.InvokeVoid("BlazorEnd");
         }
 
