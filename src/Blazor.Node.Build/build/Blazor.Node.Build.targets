@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <RunCommand>node</RunCommand>
-    <RunArguments>$(TargetDir)app.js -- --rootDirectory:$(TargetDir)$(BlazorAssetsPath) --workingDirectory:$(TargetDir)</RunArguments>
+    <RunArguments>$(TargetDir)blazor_node_app.js -- --rootDirectory:$(TargetDir)$(BlazorAssetsPath) --workingDirectory:$(TargetDir)</RunArguments>
     <!--
       The target 'ResolveRazorComponentInputs' resolves the item group RazorComponent.
       Source:
@@ -89,7 +89,7 @@
 
     <Message Importance="high" Text="  Setting up Blazor node runner" />
     <Copy SourceFiles="$(_BlazorNode_Package_Contents_Runner_Directory)\app.js"
-          DestinationFolder="$(TargetDir)" />
+          DestinationFiles="$(TargetDir)blazor_node_app.js" />
     <BlazorToNodeCopyOrMergePackageJson SourceFolder="$(_BlazorNode_Package_Contents_Runner_Directory)"
                                         DestinationFolder="$(TargetDir)" />
 

@@ -18,7 +18,8 @@ export default [
       "child_process",
       "readline",
       "jsdom",
-      "node-fetch"
+      "node-fetch",
+      "app.js"
     ]
   }
 ];
