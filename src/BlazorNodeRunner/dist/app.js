@@ -91,10 +91,12 @@
     const blazorJsPath = joinPath(rootDirectory, "_framework", "blazor.webassembly.js");
     require(blazorJsPath);
     globalThis.Blazor = window.Blazor;
+    globalThis.DotNet = window.DotNet;
     if (fileExistsSync("app.js")) {
       require("./app.js");
     }
-    window.Blazor.start();
+    // Delay Blazor startup to allow any pre-initialization to complete
+    setTimeout(() => window.Blazor.start(), 100);
 
     return new Promise(resolve => {
       const checkBlazorHasEnded = function () {
@@ -149,8 +151,10 @@
 
     try {
       await main(rootDirectory);
+      process.exit(0);
     } catch (error) {
       console.error(error);
+      process.exit(1);
     }
   })();
 

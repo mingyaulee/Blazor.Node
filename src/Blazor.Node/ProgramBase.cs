@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 
 namespace Blazor.Node
@@ -17,8 +18,16 @@ namespace Blazor.Node
 
             var host = builder.Build();
             var jsRuntime = (IJSInProcessRuntime)host.Services.GetService<IJSRuntime>();
+            var logger = host.Services.GetService<ILogger<ProgramBase>>();
 
-            await Execute(host.Services).ConfigureAwait(false);
+            try
+            {
+                await Execute(host.Services).ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                logger.LogError(exception, "An unhandled exception was thrown from program execution.");
+            }
             jsRuntime.InvokeVoid("BlazorEnd");
         }
 

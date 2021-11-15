@@ -35,7 +35,9 @@ import * as program from "./program.js";
 
   try {
     await program.main(rootDirectory);
+    process.exit(0);
   } catch (error) {
     console.error(error);
+    process.exit(1);
   }
 })();
