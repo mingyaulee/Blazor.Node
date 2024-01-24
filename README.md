@@ -1,3 +1,5 @@
+> Note: This project is deprecated because .Net 7 and above supports running WASM from any JavaScript project
+
 # Blazor.Node
 [![Nuget](https://img.shields.io/nuget/v/Blazor.Node?style=flat-square&color=blue)](https://www.nuget.org/packages/Blazor.Node/)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/mingyaulee/Blazor.Node/Build?style=flat-square&color=blue)](https://github.com/mingyaulee/Blazor.Node/actions/workflows/Blazor.Node-Build.yml)
